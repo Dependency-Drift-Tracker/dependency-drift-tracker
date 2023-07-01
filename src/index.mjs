@@ -18,19 +18,23 @@ async function main() {
   const content = await readFile(filePath, { encoding: 'utf8' });
   const lines = parseFile(content);
   const clonedRepositoriesPath = await cloneRepositories(lines);
-  lines.forEach(async ({ repository, path }) => {
-    try {
-      const repositoryPath = clonedRepositoriesPath[repository];
-      const packagePath = `${repositoryPath}${sep}${path}`;
-      const { pm, forLibYear } = await getPreferredPm(packagePath);
-      await installDependencies(packagePath, pm);
-      const result = await calculateRepository(packagePath, forLibYear);
-      const summary = createSummary(result);
-      await saveResult(`${repository}#${path}`, summary, result);
-    } catch (err) {
-      console.error(err.message);
-    }
-  });
+  const installResult = await Promise.all(lines.map(async ({ repository, path }) => {
+    const repositoryPath = clonedRepositoriesPath[repository];
+    const packagePath = `${repositoryPath}${sep}${path}`;
+    const { pm, forLibYear } = await getPreferredPm(packagePath);
+    await installDependencies(packagePath, pm);
+    return {
+      repository,
+      path,
+      packagePath,
+      pmForLibYear: forLibYear,
+    };
+  }));
+  for await (const { repository, path, packagePath, pmForLibYear } of installResult) {
+    const result = await calculateRepository(packagePath, pmForLibYear);
+    const summary = createSummary(result);
+    await saveResult(`${repository}#${path}`, summary, result);
+  }
 }
 
 export function parseFile(content) {

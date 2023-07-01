@@ -26,7 +26,7 @@ async function main() {
       await installDependencies(packagePath, pm);
       const result = await calculateRepository(packagePath, forLibYear);
       const summary = createSummary(result);
-      await saveResult(line, summary, result);
+      await saveResult(`${repository}#${path}`, summary, result);
     } catch (err) {
       console.error(err.message);
     }

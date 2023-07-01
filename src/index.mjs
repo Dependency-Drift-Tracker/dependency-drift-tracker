@@ -16,13 +16,11 @@ const exec = util.promisify(execNoPromise);
 async function main() {
   const filePath = new URL('../repositories.txt', import.meta.url);
   const content = await readFile(filePath, { encoding: 'utf8' });
-  content.split('\n').forEach(async (line) => {
-    if (line.trim() === '' || line.trim().startsWith('#')) {
-      return;
-    }
+  const lines = parseFile(content);
+  const clonedRepositoriesPath = await cloneRepositories(lines);
+  lines.forEach(async ({ repository, path }) => {
     try {
-      const { repository, path } = parseRepositoryLine(line);
-      const repositoryPath = await cloneRepository(repository, simpleGit());
+      const repositoryPath = clonedRepositoriesPath[repository];
       const packagePath = `${repositoryPath}${sep}${path}`;
       const { pm, forLibYear } = await getPreferredPm(packagePath);
       await installDependencies(packagePath, pm);
@@ -33,6 +31,26 @@ async function main() {
       console.error(err.message);
     }
   });
+}
+
+export function parseFile(content) {
+  return content.split('\n').map((line) => {
+    if (line.trim() === '' || line.trim().startsWith('#')) {
+      return;
+    }
+    return parseRepositoryLine(line);
+  }).filter(r => !!r);
+}
+
+async function cloneRepositories(lines) {
+  const clonedRepositoriesPath = {};
+  for await (const { repository } of lines) {
+    if (!clonedRepositoriesPath[repository]) {
+      const repositoryPath = await cloneRepository(repository, simpleGit());
+      clonedRepositoriesPath[repository] = repositoryPath;
+    }
+  }
+  return clonedRepositoriesPath;
 }
 
 export async function getPreferredPm(packagePath) {

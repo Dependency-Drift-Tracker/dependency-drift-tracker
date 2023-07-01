@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import {
   parseRepositoryLine,
+  parseFile,
   cloneRepository,
   replaceRepositoryWithSafeChar,
   createSummary,
@@ -20,6 +21,26 @@ describe('#parseRepositoryLine', function() {
       repository: 'https://github.com/1024pix/pix.git',
       path: 'test'
     })
+  });
+});
+
+describe('#parseFile', function() {
+  it('parse the file', function() {
+    const content = `
+https://github.com/1024pix/pix.git#api
+https://github.com/1024pix/pix.git#mon-pix
+# comment line
+`;
+    expect(parseFile(content)).to.deep.equal([
+      {
+        repository: 'https://github.com/1024pix/pix.git',
+        path: 'api',
+      },
+      {
+        repository: 'https://github.com/1024pix/pix.git',
+        path: 'mon-pix'
+      },
+    ])
   });
 });
 

@@ -76,7 +76,7 @@ export function parseRepositoryLine(line) {
 
 export async function cloneRepository(repository, simpleGit) {
   const tempRepositoryPath = await mkdtemp(`${tmpdir()}${sep}`);
-  await simpleGit.clone(repository, tempRepositoryPath)
+  await simpleGit.clone(repository, tempRepositoryPath, { '--depth': 1 })
   return tempRepositoryPath;
 }
 

@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { sep } from 'node:path';
 import util from 'node:util';
 import { exec as execNoPromise } from 'node:child_process';
-import { chdir } from 'node:process';
+import { chdir, cwd } from 'node:process';
 import simpleGit from 'simple-git';
 import { libyear } from 'francois-libyear';
 import preferredPM from 'preferred-pm';
@@ -84,9 +84,12 @@ function installDependencies(packagePath, packageManager) {
   return exec(`${packageManager} install`, { cwd: packagePath });
 }
 
-function calculateRepository(packagePath, packageManager) {
+async function calculateRepository(packagePath, packageManager) {
+  const previousDir = cwd();
   chdir(packagePath);
-  return libyear(packageManager, { all: true });
+  const result = await libyear(packageManager, { all: true });
+  chdir(previousDir);
+  return result;
 }
 
 async function saveResult(line, summary, result) {

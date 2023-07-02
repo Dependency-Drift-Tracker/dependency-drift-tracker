@@ -59,11 +59,15 @@ describe('#replaceRepositoryWithSafeChar', function() {
   [
     {
       given: 'https://github.com/1024pix/pix.git',
-      expect: 'https---github-com-1024pix-pix-git'
+      expect: 'github-com-1024pix-pix-git'
     },
     {
       given: 'https://github.com/1024pix/pix.git#api',
-      expect: 'https---github-com-1024pix-pix-git-api'
+      expect: 'github-com-1024pix-pix-git-api'
+    },
+    {
+      given: 'http://github.com/1024pix/pix.git#api',
+      expect: 'github-com-1024pix-pix-git-api'
     },
   ].forEach((line) => {
     it(`replace the repository line '${line.given}' with safe chars`, function () {

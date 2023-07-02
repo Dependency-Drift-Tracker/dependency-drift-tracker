@@ -119,7 +119,7 @@ async function saveLastResult(line, result) {
 }
 
 export function replaceRepositoryWithSafeChar(line) {
-  return line.replaceAll(/(-|\/|:|\.|#)/g, '-');
+  return line.replaceAll(/(https?:\/\/)/g, '').replaceAll(/(-|\/|:|\.|#)/g, '-');
 }
 
 export function createSummary(result) {

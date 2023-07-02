@@ -124,8 +124,8 @@ export function replaceRepositoryWithSafeChar(line) {
 
 export function createSummary(result) {
   return result.reduce((memo, dep) => {
-    memo.drift += dep.drift;
-    memo.pulse += dep.pulse;
+    memo.drift += dep.drift || 0;
+    memo.pulse += dep.pulse || 0;
     return memo;
   }, { drift: 0, pulse: 0 });
 }

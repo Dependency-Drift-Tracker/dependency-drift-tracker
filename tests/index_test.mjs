@@ -83,6 +83,7 @@ describe('#createSummary', function() {
         drift: 3,
         pulse: 1,
       },
+      {},
     ];
     expect(createSummary(result)).to.deep.equal({
       drift: 4,

@@ -2,7 +2,6 @@
   "name": "dependency-drift-tracker",
   "version": "0.0.1",
   "description": "",
-  "main": "src/index.mjs",
   "source": "index.html",
   "scripts": {
     "start": "parcel",

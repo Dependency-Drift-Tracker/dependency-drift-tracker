@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Dependency Drift Tracker</title>
+    <style type="text/css">
+      body {
+        text-align: center;
+      }
+
+      .charts {
+        margin: 0 5vw 0 25vw;
+      }
+
+      nav {
+        height: 100%;
+        width: 20vw;
+        position: absolute;
+        padding: 0;
+        left: 0;
+        top: 0;
+      }
+
+      #nav {
+        list-style: none;
+        padding: 5vw 0;
+      }
+
+      #nav button {
+        width: 100%;
+        padding: 1em;
+        background-color: white;
+        border: 0px;
+        cursor: pointer;
+      }
+
+      #nav button:hover {
+        background-color: #eee;
+      }
+
+      #nav button.selected {
+        background-color: #eee;
+      }
+
+      @media (max-width: 480px) {
+        nav {
+          height: auto;
+          width: 100%;
+          position: static;
+        }
+
+        .charts {
+          width: 100%;
+          margin: 0 auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dependency Drift Tracker</h1>
+    <nav>
+      <ul id="nav"></ul>
+    </nav>
+    <div class="charts">
+      <h2>Dependency Drift</h2>
+      <p>drift representing "dependency drift"; the time between the release of the currently used and latest (stable) available versions of a dependency. Measured in "libyears".</p>
+      <canvas id="driftChart"></canvas>
+      <h2>Dependency Pulse</h2>
+      <p>pulse representing "pulse check", an indication of a dependency's activity; the time since the release of the latest available version of a dependency (including pre-release). Measured in "libyears".</p>
+      <canvas id="pulseChart"></canvas>
+    </div>
+    <small id="description"></small>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="src/web.js" type="module"></script>
+  </body>
+</html>

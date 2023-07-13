@@ -20,6 +20,7 @@
   "devDependencies": {
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
-    "parcel": "^2.9.3"
+    "parcel": "^2.9.3",
+    "sinon": "^15.1.2"
   }
 }

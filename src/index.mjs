@@ -13,7 +13,7 @@ const { satisfies } = semver;
 
 const exec = util.promisify(execNoPromise);
 
-async function main() {
+export async function main() {
   const filePath = new URL('../repositories.txt', import.meta.url);
   const content = await readFile(filePath, { encoding: 'utf8' });
   const lines = parseFile(content);
@@ -128,8 +128,4 @@ export function createSummary(result) {
     memo.pulse += dep.pulse || 0;
     return memo;
   }, { drift: 0, pulse: 0 });
-}
-
-if (process.env.NODE_ENV !== 'test') {
-  main();
 }

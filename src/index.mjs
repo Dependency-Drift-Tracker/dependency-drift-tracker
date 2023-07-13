@@ -8,6 +8,9 @@ import simpleGit from 'simple-git';
 import { libyear } from 'francois-libyear';
 import preferredPM from 'preferred-pm';
 import semver from 'semver';
+import { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar } from './utils.mjs';
+
+export { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar };
 
 const { satisfies } = semver;
 
@@ -37,15 +40,6 @@ export async function main() {
   }
 }
 
-export function parseFile(content) {
-  return content.split('\n').map((line) => {
-    if (line.trim() === '' || line.trim().startsWith('#')) {
-      return;
-    }
-    return parseRepositoryLine(line);
-  }).filter(r => !!r);
-}
-
 async function cloneRepositories(lines) {
   const clonedRepositoriesPath = {};
   for await (const { repository } of lines) {
@@ -67,14 +61,6 @@ export async function getPreferredPm(packagePath) {
   return {
     pm,
     forLibYear,
-  };
-}
-
-export function parseRepositoryLine(line) {
-  const [repository, path] = line.split('#');
-  return {
-    repository,
-    path: path || '',
   };
 }
 
@@ -116,10 +102,6 @@ async function saveSummary(line, summary) {
 async function saveLastResult(line, result) {
   const filePath = `data/last-run-${replaceRepositoryWithSafeChar(line)}.json`;
   await writeFile(filePath, JSON.stringify(result));
-}
-
-export function replaceRepositoryWithSafeChar(line) {
-  return line.replaceAll(/(https?:\/\/)/g, '').replaceAll(/(-|\/|:|\.|#)/g, '-');
 }
 
 export function createSummary(result) {

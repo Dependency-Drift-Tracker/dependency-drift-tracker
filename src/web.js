@@ -1,3 +1,4 @@
+import Chart from 'chart.js/auto';
 import { parseFile, replaceRepositoryWithSafeChar } from './utils.mjs';
 
 const PATH = process.env.REPOSITORY_URL || `https://raw.githubusercontent.com/1024pix/dependency-drift-tracker/main/`;

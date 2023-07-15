@@ -16,8 +16,12 @@ jobs:
       run: npm ci
     - name: Run tests
       run: npm test
+    - name: get repository name
+      run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
     - name: Build website
-      run: npm run build
+      run: npm run build -- --public-url ${{ env.REPOSITORY_NAME }}
+      env:
+        REPOSITORY_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with:

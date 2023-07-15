@@ -5,7 +5,7 @@
   "source": "index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build --public-url /dependency-drift-tracker/",
+    "build": "parcel build",
     "test": "NODE_ENV=test mocha tests"
   },
   "author": "François de Metz",

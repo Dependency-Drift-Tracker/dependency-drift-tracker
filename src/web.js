@@ -130,7 +130,7 @@ async function displayLastRun(line) {
     td.textContent = content;
     tr.appendChild(td);
   }
-  const toFixedInteger = (number) => Number.isInteger(number) ? number : number.toFixed(2);
+  const toFixedInteger = (number) => Number.isInteger(number) ? number : number?.toFixed(2);
   data.forEach((d) => {
     const tr = document.createElement('tr');
     createTd(tr, d.dependency);

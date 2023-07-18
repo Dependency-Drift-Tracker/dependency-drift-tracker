@@ -13,10 +13,10 @@ npm ci
 Tout d'abord, il faut remplir le fichier `repositories.txt` avec les urls des repositories à suivre.
 Dans le cas d'un monorepo, vous pouvez suffixer l'url par `#path` pour indiquer le chemin vers le `package.json` à suivre.
 
-Ensuite, il faut lancer le script `src/index.mjs` :  
+Ensuite, il faut lancer le script `bin/main.mjs` :  
 
 ```bash
-npm run start
+node bin/main.mjs
 ```
 
 Nous avons fait le choix, de lancer le script toutes les 24h avec un cron dans une GitHub Action 

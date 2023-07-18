@@ -19,10 +19,9 @@ function displayNav(repositories) {
     link.classList.add('nav-link');
     const line = createLine({ repository, path });
     link.innerText = beautifyLine(line);
-    link.setAttribute('href', '#')
+    link.setAttribute('href', `#${line}`)
     link.dataset.line = createLine({ repository, path });
     link.addEventListener('click', (e) => {
-      e.preventDefault();
       displayResult({ repository, path });
       selectButton({ repository, path });
     })
@@ -153,8 +152,18 @@ function selectButton({ repository, path }) {
 async function main() {
   const repositories = parseFile(await getRepositories());
   displayNav(repositories);
-  await displayResult(repositories[0]);
-  await selectButton(repositories[0]);
+  let selectedRepository = repositories[0];
+  if (location.hash.length > 0) {
+    const hash = location.hash.slice(1);
+    repositories.forEach((param) => {
+      const line = createLine(param);
+      if (line === hash) {
+        selectedRepository = param;
+      }
+    });
+  }
+  displayResult(selectedRepository);
+  selectButton(selectedRepository);
 }
 
 main();

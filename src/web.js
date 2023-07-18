@@ -112,6 +112,8 @@ async function displayChart(line) {
       scales: {
         y: {
           position: "left",
+          beginAtZero: true,
+          suggestedMin: 0,
         },
       },
     },

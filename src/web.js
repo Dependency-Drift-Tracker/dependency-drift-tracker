@@ -14,15 +14,19 @@ function displayNav(repositories) {
   const nav = document.getElementById("nav");
   repositories.forEach(({ repository, path }) => {
     const li = document.createElement("li");
-    const button = document.createElement("button");
+    li.classList.add('nav-item');
+    const link = document.createElement("a");
+    link.classList.add('nav-link');
     const line = createLine({ repository, path });
-    button.innerText = beautifyLine(line);
-    button.dataset.line = createLine({ repository, path });
-    button.addEventListener('click', (e) => {
+    link.innerText = beautifyLine(line);
+    link.setAttribute('href', '#')
+    link.dataset.line = createLine({ repository, path });
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
       displayChart({ repository, path });
       selectButton({ repository, path });
     })
-    li.appendChild(button);
+    li.appendChild(link);
     nav.appendChild(li);
   });
 }
@@ -111,13 +115,13 @@ async function displayChart({ repository, path }) {
 }
 
 function selectButton({ repository, path }) {
-  const buttons = document.querySelectorAll("[data-line]");
-  buttons.forEach(button => {
-    button.classList.remove("selected");
+  const links = document.querySelectorAll("[data-line]");
+  links.forEach(link => {
+    link.classList.remove("active");
   });
   const line = createLine({ repository, path });
-  const button = document.querySelector(`[data-line="${line}"]`);
-  button.classList.add("selected");
+  const link = document.querySelector(`[data-line="${line}"]`);
+  link.classList.add("active");
 }
 
 async function main() {

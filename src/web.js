@@ -23,7 +23,7 @@ function displayNav(repositories) {
     link.dataset.line = createLine({ repository, path });
     link.addEventListener('click', (e) => {
       e.preventDefault();
-      displayChart({ repository, path });
+      displayResult({ repository, path });
       selectButton({ repository, path });
     })
     li.appendChild(link);
@@ -39,8 +39,13 @@ function beautifyLine(line) {
   return line.replaceAll('https://github.com/', '').replaceAll('.git', '');
 }
 
-async function displayChart({ repository, path }) {
+async function displayResult({ repository, path }) {
   const line = createLine({ repository, path });
+  displayChart(line);
+  displayLastRun(line);
+}
+
+async function displayChart(line) {
   const response = await fetch(`${PATH}/data/history-${replaceRepositoryWithSafeChar(line)}.json`);
   const data = await response.json();
   const labels = data.map((d, i) => i);
@@ -114,6 +119,27 @@ async function displayChart({ repository, path }) {
   })
 }
 
+async function displayLastRun(line) {
+  const response = await fetch(`${PATH}/data/last-run-${replaceRepositoryWithSafeChar(line)}.json`);
+  const data = await response.json();
+
+  const tbody = document.getElementsByTagName('tbody')[0];
+  tbody.textContent = '';
+  const createTd = (tr, content) => {
+    const td = document.createElement('td');
+    td.textContent = content;
+    tr.appendChild(td);
+  }
+  const toFixedInteger = (number) => Number.isInteger(number) ? number : number.toFixed(2);
+  data.forEach((d) => {
+    const tr = document.createElement('tr');
+    createTd(tr, d.dependency);
+    createTd(tr, toFixedInteger(d.drift));
+    createTd(tr, toFixedInteger(d.pulse));
+    tbody.appendChild(tr);
+  });
+}
+
 function selectButton({ repository, path }) {
   const links = document.querySelectorAll("[data-line]");
   links.forEach(link => {
@@ -127,7 +153,7 @@ function selectButton({ repository, path }) {
 async function main() {
   const repositories = parseFile(await getRepositories());
   displayNav(repositories);
-  await displayChart(repositories[0]);
+  await displayResult(repositories[0]);
   await selectButton(repositories[0]);
 }
 

@@ -2,8 +2,14 @@ import Chart from 'chart.js/auto';
 import { parseFile, replaceRepositoryWithSafeChar } from './utils.mjs';
 
 const PATH = process.env.REPOSITORY_URL || `https://raw.githubusercontent.com/1024pix/dependency-drift-tracker/main`;
+
 let driftChart;
 let pulseChart;
+const historyFiles = {};
+
+function formatFloat(number) {
+ return Number.isInteger(number) ? number : number?.toFixed(2);
+}
 
 async function getRepositories() {
   const response = await fetch(`${PATH}/repositories.txt`);
@@ -16,15 +22,24 @@ function displayNav(repositories) {
     const li = document.createElement("li");
     li.classList.add('nav-item');
     const link = document.createElement("a");
-    link.classList.add('nav-link');
+    link.classList.add('nav-link', 'd-flex');
     const line = createLine({ repository, path });
-    link.innerText = beautifyLine(line);
     link.setAttribute('href', `#${line}`)
-    link.dataset.line = createLine({ repository, path });
+    link.dataset.line = line;
     link.addEventListener('click', (e) => {
       displayResult({ repository, path });
       selectButton({ repository, path });
-    })
+    });
+    const span = document.createElement('span');
+    span.classList.add('flex-grow-1');
+    span.textContent = beautifyLine(line);
+    link.appendChild(span);
+    historyFiles[line].then((data) => {
+      const badge = document.createElement('span');
+      badge.classList.add('badge', 'bg-secondary', 'align-self-center');
+      badge.textContent = formatFloat(data[data.length - 1].drift);
+      link.appendChild(badge);
+    });
     li.appendChild(link);
     nav.appendChild(li);
   });
@@ -45,8 +60,7 @@ async function displayResult({ repository, path }) {
 }
 
 async function displayChart(line) {
-  const response = await fetch(`${PATH}/data/history-${replaceRepositoryWithSafeChar(line)}.json`);
-  const data = await response.json();
+  const data = await historyFiles[line];
   const labels = data.map((d, i) => i);
 
   const driftCtx = document.getElementById("driftChart");
@@ -131,12 +145,11 @@ async function displayLastRun(line) {
     td.textContent = content;
     tr.appendChild(td);
   }
-  const toFixedInteger = (number) => Number.isInteger(number) ? number : number?.toFixed(2);
   data.forEach((d) => {
     const tr = document.createElement('tr');
     createTd(tr, d.dependency);
-    createTd(tr, toFixedInteger(d.drift));
-    createTd(tr, toFixedInteger(d.pulse));
+    createTd(tr, formatFloat(d.drift));
+    createTd(tr, formatFloat(d.pulse));
     tbody.appendChild(tr);
   });
 }
@@ -153,6 +166,10 @@ function selectButton({ repository, path }) {
 
 async function main() {
   const repositories = parseFile(await getRepositories());
+  repositories.forEach(({ repository, path }) => {
+    const line = createLine({ repository, path });
+    historyFiles[line] = fetch(`${PATH}/data/history-${replaceRepositoryWithSafeChar(line)}.json`).then(r => r.json());
+  });
   displayNav(repositories);
   let selectedRepository = repositories[0];
   if (location.hash.length > 0) {

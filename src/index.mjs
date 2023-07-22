@@ -16,6 +16,13 @@ const { satisfies } = semver;
 
 const exec = util.promisify(execNoPromise);
 
+const installCommand = {
+  npm: 'npm install --ignore-scripts',
+  yarn: 'yarn install --ignore-scripts',
+  berry: 'yarn config set enableScripts false && yarn install',
+  pnpm: 'pnpm install --ignore-scripts'
+};
+
 export async function main() {
   const filePath = new URL('../repositories.txt', import.meta.url);
   const content = await readFile(filePath, { encoding: 'utf8' });
@@ -24,17 +31,17 @@ export async function main() {
   const installResult = await Promise.all(lines.map(async ({ repository, path }) => {
     const repositoryPath = clonedRepositoriesPath[repository];
     const packagePath = `${repositoryPath}${sep}${path}`;
-    const { pm, forLibYear } = await getPreferredPm(packagePath);
-    await installDependencies(packagePath, pm);
+    const packageManager = await getPreferredPm(packagePath);
+    await installDependencies(packagePath, packageManager);
     return {
       repository,
       path,
       packagePath,
-      pmForLibYear: forLibYear,
+      packageManager,
     };
   }));
-  for await (const { repository, path, packagePath, pmForLibYear } of installResult) {
-    const result = await calculateRepository(packagePath, pmForLibYear);
+  for await (const { repository, path, packagePath, packageManager } of installResult) {
+    const result = await calculateRepository(packagePath, packageManager);
     const summary = createSummary(result);
     await saveResult(`${repository}#${path}`, summary, result);
   }
@@ -53,15 +60,11 @@ async function cloneRepositories(lines) {
 
 export async function getPreferredPm(packagePath) {
   const pm = (await preferredPM(packagePath)).name;
-  let forLibYear = pm;
   if (pm === 'yarn') {
     const { stdout } = await exec('yarn --version', { cwd: packagePath });
-    forLibYear = satisfies(stdout, "^0 || ^1") ? "yarn" : "berry";
+    return satisfies(stdout, "^0 || ^1") ? "yarn" : "berry";
   }
-  return {
-    pm,
-    forLibYear,
-  };
+  return pm;
 }
 
 export async function cloneRepository(repository, simpleGit) {
@@ -71,7 +74,7 @@ export async function cloneRepository(repository, simpleGit) {
 }
 
 function installDependencies(packagePath, packageManager) {
-  return exec(`${packageManager} install --ignore-scripts`, { cwd: packagePath });
+  return exec(installCommand[packageManager], { cwd: packagePath });
 }
 
 async function calculateRepository(packagePath, packageManager) {

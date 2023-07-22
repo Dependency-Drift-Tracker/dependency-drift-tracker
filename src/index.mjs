@@ -71,7 +71,7 @@ export async function cloneRepository(repository, simpleGit) {
 }
 
 function installDependencies(packagePath, packageManager) {
-  return exec(`${packageManager} install`, { cwd: packagePath });
+  return exec(`${packageManager} install --ignore-scripts`, { cwd: packagePath });
 }
 
 async function calculateRepository(packagePath, packageManager) {

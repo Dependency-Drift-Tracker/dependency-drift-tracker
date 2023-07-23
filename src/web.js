@@ -79,25 +79,19 @@ async function displayTitleAndSummary({ repository, path, line }) {
   pulseSummary.textContent = `${formatFloat(lastResult.pulse)} libyears`;
 }
 
-async function displayChart(line) {
-  const data = await historyFiles[line];
+
+function createChart(ctx, label, data, property, baseColor) {
   const labels = data.map((d, i) => i);
-
-  const driftCtx = document.getElementById("driftChart");
-  const pulseCtx = document.getElementById("pulseChart");
-  if (driftChart) driftChart.destroy();
-  if (pulseChart) pulseChart.destroy();
-
-  driftChart = new Chart(driftCtx, {
+  return new Chart(ctx, {
     data: {
       labels,
       datasets: [
         {
           type: 'line',
-          label: 'Dependency Drift',
-          data: data.map(d => d.drift),
-          backgroundColor: 'rgba(0, 63, 92, 0.2)',
-          borderColor: 'rgba(0, 63, 92, 1)',
+          label,
+          data: data.map(d => formatFloat(d[property])),
+          backgroundColor: `rgba(${baseColor.join()}, 0.2)`,
+          borderColor: `rgba(${baseColor.join()}, 1)`,
           borderWidth: 1,
         },
       ],
@@ -106,7 +100,7 @@ async function displayChart(line) {
       plugins: {
         tooltip: {
           callbacks: {
-            label: ({label, formattedValue}) => `${label} : ${formattedValue} libyears`
+            label: ({label, formattedValue}) => `${formattedValue} libyears`
           }
         }
       },
@@ -119,39 +113,18 @@ async function displayChart(line) {
       },
     },
   });
+}
 
+async function displayChart(line) {
+  const data = await historyFiles[line];
 
-  pulseChart = new Chart(pulseCtx, {
-    data: {
-      labels,
-      datasets: [
-        {
-          type: 'line',
-          label: 'Dependency Pulse',
-          data: data.map(d => d.pulse),
-          backgroundColor: 'rgba(155, 209, 132, 0.2)',
-          borderColor: 'rgba(155, 209, 132, 1)',
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: ({label, formattedValue}) => `${label} : ${formattedValue} libyears`
-          }
-        }
-      },
-      scales: {
-        y: {
-          position: "left",
-          beginAtZero: true,
-          suggestedMin: 0,
-        },
-      },
-    },
-  })
+  const driftCtx = document.getElementById("driftChart");
+  const pulseCtx = document.getElementById("pulseChart");
+  if (driftChart) driftChart.destroy();
+  if (pulseChart) pulseChart.destroy();
+
+  driftChart = createChart(driftCtx, 'Dependency Drift', data, 'drift', [0, 63, 92]);
+  pulseChart = createChart(pulseCtx, 'Dependency Pulse', data, 'pulse', [155, 209, 132]);
 }
 
 async function displayLastRun(line) {

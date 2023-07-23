@@ -162,7 +162,7 @@ async function displayLastRun(line) {
   tbody.textContent = '';
   const createTd = (tr, content) => {
     const td = document.createElement('td');
-    td.appendChild(content instanceof Node ? content : document.createTextNode(content));
+    td.appendChild(content instanceof Node ? content : document.createTextNode(content === undefined ? '' : content));
     tr.appendChild(td);
   }
   data.forEach((d) => {

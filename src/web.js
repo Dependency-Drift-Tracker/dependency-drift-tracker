@@ -74,9 +74,9 @@ async function displayTitleAndSummary({ repository, path, line }) {
   title.textContent = '';
   title.appendChild(createLink(repository, beautifyLine(line)));
   const driftSummary = document.getElementById("driftSummary");
-  driftSummary.textContent = `${formatFloat(lastResult.drift)} years`;
+  driftSummary.textContent = `${formatFloat(lastResult.drift)} libyears`;
   const pulseSummary = document.getElementById("pulseSummary");
-  pulseSummary.textContent = `${formatFloat(lastResult.pulse)} years`;
+  pulseSummary.textContent = `${formatFloat(lastResult.pulse)} libyears`;
 }
 
 async function displayChart(line) {

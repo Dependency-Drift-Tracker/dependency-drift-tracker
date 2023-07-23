@@ -11,6 +11,13 @@ function formatFloat(number) {
  return Number.isInteger(number) ? number : number?.toFixed(2);
 }
 
+const createLink = (href, content) => {
+  const a = document.createElement('a');
+  a.setAttribute('href', href);
+  a.textContent = content;
+  return a;
+}
+
 async function getRepositories() {
   const response = await fetch(`${PATH}/repositories.txt`);
   return response.text();
@@ -55,8 +62,21 @@ function beautifyLine(line) {
 
 async function displayResult({ repository, path }) {
   const line = createLine({ repository, path });
+  displayTitleAndSummary({ repository, path, line });
   displayChart(line);
   displayLastRun(line);
+}
+
+async function displayTitleAndSummary({ repository, path, line }) {
+  const data = await historyFiles[line];
+  const lastResult = data[data.length - 1]
+  const title = document.getElementById('title');
+  title.textContent = '';
+  title.appendChild(createLink(repository, beautifyLine(line)));
+  const driftSummary = document.getElementById("driftSummary");
+  driftSummary.textContent = `${formatFloat(lastResult.drift)} years`;
+  const pulseSummary = document.getElementById("pulseSummary");
+  pulseSummary.textContent = `${formatFloat(lastResult.pulse)} years`;
 }
 
 async function displayChart(line) {
@@ -144,12 +164,6 @@ async function displayLastRun(line) {
     const td = document.createElement('td');
     td.appendChild(content instanceof Node ? content : document.createTextNode(content));
     tr.appendChild(td);
-  }
-  const createLink = (href, content) => {
-    const a = document.createElement('a');
-    a.setAttribute('href', href);
-    a.textContent = content;
-    return a;
   }
   data.forEach((d) => {
     const tr = document.createElement('tr');

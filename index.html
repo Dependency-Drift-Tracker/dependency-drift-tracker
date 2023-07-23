@@ -21,13 +21,34 @@
           </nav>
         </div>
         <div class="col col-md-9">
-          <h2>Dependency Drift</h2>
-          <p>drift representing "dependency drift"; the time between the release of the currently used and latest (stable) available versions of a dependency. Measured in "libyears".</p>
+          <h1 id="title"></h1>
+          <div class="container-md column-gap-3 py-3 gx-0">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card text-bg-secondary">
+                  <div class="card-body">
+                    <h5 class="card-title">Drift</h5>
+                    <p class="card-text fs-2" id="driftSummary"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card text-bg-secondary">
+                  <div class="card-body">
+                    <h5 class="card-title">Pulse</h5>
+                    <p class="card-text fs-2" id="pulseSummary"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2 class="pt-2">Dependency Drift</h2>
+          <p class="fw-light">drift representing "dependency drift"; the time between the release of the currently used and latest (stable) available versions of a dependency. Measured in "libyears".</p>
           <canvas id="driftChart"></canvas>
-          <h2>Dependency Pulse</h2>
-          <p>pulse representing "pulse check", an indication of a dependency's activity; the time since the release of the latest available version of a dependency (including pre-release). Measured in "libyears".</p>
+          <h2 class="pt-3">Dependency Pulse</h2>
+          <p class="fw-light">pulse representing "pulse check", an indication of a dependency's activity; the time since the release of the latest available version of a dependency (including pre-release). Measured in "libyears".</p>
           <canvas id="pulseChart"></canvas>
-          <h2>Last run result</h2>
+          <h2 class="pt-3">Last run result</h2>
           <table class="table table-striped">
             <thead>
               <tr>

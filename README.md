@@ -1,6 +1,6 @@
 # Dependency drift tracker
 
-Ce projet a pour but de suivre nos retards sur les mises à jour de dépendances pour nos projets Node.js.
+Ce projet a pour but de suivre nos retards sur les mises à jour de dépendances pour nos projets Node.js via la métrique [libyear][].
 
 ## Installation
 
@@ -24,7 +24,4 @@ et qui commit les nouveaux résultats.
 
 Enfin, la page `index.html` permet de visualiser les résultats.
 
-## Limitations
-
-Si les repositories ont dans leur `package.json` une partie `engine` avec une version de Node.js spécifique, 
-vous devez alors être conforme à celle-ci pour lancer ce projet.
+[libyear]: https://libyear.com/

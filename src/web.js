@@ -142,12 +142,18 @@ async function displayLastRun(line) {
   tbody.textContent = '';
   const createTd = (tr, content) => {
     const td = document.createElement('td');
-    td.textContent = content;
+    td.appendChild(content instanceof Node ? content : document.createTextNode(content));
     tr.appendChild(td);
+  }
+  const createLink = (href, content) => {
+    const a = document.createElement('a');
+    a.setAttribute('href', href);
+    a.textContent = content;
+    return a;
   }
   data.forEach((d) => {
     const tr = document.createElement('tr');
-    createTd(tr, d.dependency);
+    createTd(tr, createLink(`https://www.npmjs.com/package/${d.dependency}`, d.dependency));
     createTd(tr, formatFloat(d.drift));
     createTd(tr, formatFloat(d.pulse));
     tbody.appendChild(tr);

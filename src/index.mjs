@@ -112,5 +112,5 @@ export function createSummary(result) {
     memo.drift += dep.drift || 0;
     memo.pulse += dep.pulse || 0;
     return memo;
-  }, { drift: 0, pulse: 0 });
+  }, { drift: 0, pulse: 0, date: new Date() });
 }

@@ -89,9 +89,11 @@ describe('#createSummary', function() {
       },
       {},
     ];
-    expect(createSummary(result)).to.deep.equal({
+    const summary = createSummary(result)
+    expect(summary).to.deep.include({
       drift: 4,
       pulse: 3,
     });
+    expect(summary.date).to.exist;
   });
 });

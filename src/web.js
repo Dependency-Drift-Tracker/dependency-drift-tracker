@@ -1,10 +1,13 @@
 import Chart from 'chart.js/auto';
+import DataTable from 'datatables.net-bs';
+import 'datatables.net-bs/css/dataTables.bootstrap.css'
 import { parseFile, replaceRepositoryWithSafeChar } from './utils.mjs';
 
 const PATH = process.env.REPOSITORY_URL || `https://raw.githubusercontent.com/1024pix/dependency-drift-tracker/main`;
 
 let driftChart;
 let pulseChart;
+let table;
 const historyFiles = {};
 
 function formatFloat(number) {
@@ -128,6 +131,7 @@ async function displayChart(line) {
 }
 
 async function displayLastRun(line) {
+  if (table) table.destroy();
   const response = await fetch(`${PATH}/data/last-run-${replaceRepositoryWithSafeChar(line)}.json`);
   const data = await response.json();
 
@@ -144,6 +148,12 @@ async function displayLastRun(line) {
     createTd(tr, formatFloat(d.drift));
     createTd(tr, formatFloat(d.pulse));
     tbody.appendChild(tr);
+  });
+
+  table = new DataTable('#rawResult', {
+    paging: false,
+    searching: false,
+    info: false,
   });
 }
 

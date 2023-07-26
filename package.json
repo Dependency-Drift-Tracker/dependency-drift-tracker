@@ -21,6 +21,7 @@
     "bootstrap": "^5.3.0",
     "chai": "^4.3.7",
     "chart.js": "^4.3.0",
+    "datatables.net-bs": "^1.13.5",
     "mocha": "^10.2.0",
     "parcel": "^2.9.3",
     "sinon": "^15.1.2"

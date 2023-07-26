@@ -51,7 +51,7 @@ async function cloneRepositories(lines) {
   const clonedRepositoriesPath = {};
   for await (const { repository } of lines) {
     if (!clonedRepositoriesPath[repository]) {
-      const repositoryPath = await cloneRepository(repository, simpleGit());
+      const repositoryPath = await cloneRepository(repository, simpleGit(), process.env);
       clonedRepositoriesPath[repository] = repositoryPath;
     }
   }
@@ -67,9 +67,15 @@ export async function getPreferredPm(packagePath) {
   return pm;
 }
 
-export async function cloneRepository(repository, simpleGit) {
+export function replaceRepositoryVariablesWithEnvVariables(repository, variables) {
+  return Object.keys(variables).reduce((memo, key) => {
+    return memo.replaceAll(`$${key}`, variables[key]);
+  }, repository);
+}
+
+export async function cloneRepository(repository, simpleGit, env) {
   const tempRepositoryPath = await mkdtemp(`${tmpdir()}${sep}`);
-  await simpleGit.clone(repository, tempRepositoryPath, { '--depth': 1 })
+  await simpleGit.clone(replaceRepositoryVariablesWithEnvVariables(repository, env), tempRepositoryPath, { '--depth': 1 })
   return tempRepositoryPath;
 }
 

@@ -1,3 +1,6 @@
-import { main } from '../src/index.mjs';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import { main } from '../scripts/fill-date.mjs';
 
-main();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+await main(join(__dirname, '../data'));

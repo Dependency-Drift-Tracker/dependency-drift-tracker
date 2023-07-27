@@ -21,7 +21,7 @@ jobs:
       env:
         REPOSITORY_URL: https://raw.githubusercontent.com/${{ github.repository }}/main
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v1
+      uses: actions/upload-pages-artifact@v2
       with:
         path: dist
 

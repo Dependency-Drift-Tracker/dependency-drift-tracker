@@ -84,7 +84,7 @@ async function displayTitleAndSummary({ repository, path, line }) {
 
 
 function createChart(ctx, label, data, property, baseColor) {
-  const labels = data.map((d, i) => d.date ? new Date(d.date).toLocaleDateString() : i);
+  const labels = data.map((d, i) => new Date(d.date).toLocaleDateString());
   return new Chart(ctx, {
     data: {
       labels,

@@ -24,10 +24,11 @@ const installCommand = {
 };
 
 export async function main() {
+  const git = simpleGit();
   const filePath = new URL('../repositories.txt', import.meta.url);
   const content = await readFile(filePath, { encoding: 'utf8' });
   const lines = parseFile(content);
-  const clonedRepositoriesPath = await cloneRepositories(lines);
+  const clonedRepositoriesPath = await cloneRepositories(lines, git);
   const installResult = await Promise.all(lines.map(async ({ repository, path }) => {
     const repositoryPath = clonedRepositoriesPath[repository];
     const packagePath = `${repositoryPath}${sep}${path}`;
@@ -45,13 +46,21 @@ export async function main() {
     const summary = createSummary(result);
     await saveResult(`${repository}#${path}`, summary, result);
   }
+  await commitChange(git);
 }
 
-async function cloneRepositories(lines) {
+export async function commitChange(simpleGit) {
+  await simpleGit.addConfig('user.name', 'Dependency drift tracker');
+  await simpleGit.addConfig('user.email', 'dependency-drift-tracker@users.noreply.github.com');
+  await simpleGit.add('data');
+  await simpleGit.commit('Update data');
+}
+
+async function cloneRepositories(lines, simpleGit) {
   const clonedRepositoriesPath = {};
   for await (const { repository } of lines) {
     if (!clonedRepositoriesPath[repository]) {
-      const repositoryPath = await cloneRepository(repository, simpleGit(), process.env);
+      const repositoryPath = await cloneRepository(repository, simpleGit, process.env);
       clonedRepositoriesPath[repository] = repositoryPath;
     }
   }

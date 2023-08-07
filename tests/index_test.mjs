@@ -7,6 +7,7 @@ import {
   replaceRepositoryVariablesWithEnvVariables,
   replaceRepositoryWithSafeChar,
   createSummary,
+  commitChange,
 } from '../src/index.mjs';
 
 describe('#parseRepositoryLine', function() {
@@ -62,6 +63,20 @@ describe('#cloneRepository', function() {
     const repositoryPath = await cloneRepository('https://$FOO@github.com/1024pix/pix.git', simpleGit, { FOO: 'BAR' });
     expect(simpleGit.clone.calledWith('https://BAR@github.com/1024pix/pix.git')).to.be.true;
     expect(repositoryPath).to.be.a('string');
+  });
+});
+
+describe('#commitChange', function() {
+  it('configure the git instance', async function() {
+    const simpleGit = {
+      addConfig: sinon.stub().resolves(null),
+      add: sinon.stub().resolves(null),
+      commit: sinon.stub().resolves(null),
+    };
+    await commitChange(simpleGit);
+    expect(simpleGit.addConfig.calledTwice).to.be.true;
+    expect(simpleGit.add.calledWith('data')).to.be.true;
+    expect(simpleGit.commit.calledWith('Update data')).to.be.true;
   });
 });
 

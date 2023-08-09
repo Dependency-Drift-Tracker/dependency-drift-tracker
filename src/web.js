@@ -96,6 +96,7 @@ function createChart(ctx, label, data, property, baseColor) {
           backgroundColor: `rgba(${baseColor.join()}, 0.2)`,
           borderColor: `rgba(${baseColor.join()}, 1)`,
           borderWidth: 1,
+          unit: 'libyears',
         },
       ],
     },
@@ -103,7 +104,15 @@ function createChart(ctx, label, data, property, baseColor) {
       plugins: {
         tooltip: {
           callbacks: {
-            label: ({label, formattedValue}) => `${formattedValue} libyears`
+            label: (context) => {
+              const dataset = context.dataset;
+              const index = context.dataIndex;
+              const value = dataset.data[index];
+              const label = dataset.label || "";
+              const unit = dataset.unit || "";
+
+              return `${label}: ${value} (${unit})`;
+            }
           }
         }
       },

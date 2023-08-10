@@ -96,6 +96,7 @@ function createChart(ctx, label, data, property, baseColor) {
           backgroundColor: `rgba(${baseColor.join()}, 0.2)`,
           borderColor: `rgba(${baseColor.join()}, 1)`,
           borderWidth: 1,
+          unit: 'libyears',
         },
       ],
     },
@@ -103,7 +104,15 @@ function createChart(ctx, label, data, property, baseColor) {
       plugins: {
         tooltip: {
           callbacks: {
-            label: ({label, formattedValue}) => `${formattedValue} libyears`
+            label: (context) => {
+              const dataset = context.dataset;
+              const index = context.dataIndex;
+              const value = dataset.data[index];
+              const label = dataset.label || "";
+              const unit = dataset.unit || "";
+
+              return `${label}: ${value} (${unit})`;
+            }
           }
         }
       },
@@ -135,26 +144,38 @@ async function displayLastRun(line) {
   const response = await fetch(`${PATH}/data/last-run-${replaceRepositoryWithSafeChar(line)}.json`);
   const data = await response.json();
 
-  const tbody = document.getElementsByTagName('tbody')[0];
-  tbody.textContent = '';
-  const createTd = (tr, content) => {
-    const td = document.createElement('td');
-    td.appendChild(content instanceof Node ? content : document.createTextNode(content === undefined ? '' : content));
-    tr.appendChild(td);
-  }
-  data.forEach((d) => {
-    const tr = document.createElement('tr');
-    createTd(tr, createLink(`https://www.npmjs.com/package/${d.dependency}`, d.dependency));
-    createTd(tr, formatFloat(d.drift));
-    createTd(tr, formatFloat(d.pulse));
-    tbody.appendChild(tr);
-  });
-
   table = new DataTable('#rawResult', {
     paging: false,
     searching: false,
     info: false,
+    columns: [
+      {
+        data: 'dependency',
+        title: 'Dependency',
+        render(data, type) {
+          return type === 'display' ? `<a href="https://www.npmjs.com/package/${data}">${data}</a` : data
+        },
+      },
+      {
+        data: 'drift',
+        title: 'Drift',
+        render: renderFloat,
+      },
+      {
+        data: 'pulse',
+        title: 'Pulse',
+        render: renderFloat,
+      },
+    ],
+    data,
   });
+}
+
+function renderFloat(data, type) {
+  if (type !== 'display') {
+    return data;
+  }
+  return data === null ? '' :  formatFloat(data);
 }
 
 function selectButton({ repository, path }) {

@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdtemp, access, constants } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { sep } from 'node:path';
+import { join, sep } from 'node:path';
 import util from 'node:util';
 import { exec as execNoPromise } from 'node:child_process';
 import { chdir, cwd } from 'node:process';
@@ -24,14 +24,15 @@ const installCommand = {
 };
 
 export async function main() {
+  const basePath = cwd();
   const git = simpleGit();
-  const filePath = new URL('../repositories.txt', import.meta.url);
+  const filePath = join(basePath, 'repositories.txt');
   const content = await readFile(filePath, { encoding: 'utf8' });
   const lines = parseFile(content);
   const clonedRepositoriesPath = await cloneRepositories(lines, git);
   const installResult = await Promise.all(lines.map(async ({ repository, path }) => {
     const repositoryPath = clonedRepositoriesPath[repository];
-    const packagePath = `${repositoryPath}${sep}${path}`;
+    const packagePath = join(repositoryPath, path);
     const packageManager = await getPreferredPm(packagePath);
     await installDependencies(packagePath, packageManager);
     return {
@@ -44,7 +45,7 @@ export async function main() {
   for await (const { repository, path, packagePath, packageManager } of installResult) {
     const result = await calculateRepository(packagePath, packageManager);
     const summary = createSummary(result);
-    await saveResult(`${repository}#${path}`, summary, result);
+    await saveResult(basePath, `${repository}#${path}`, summary, result);
   }
   await commitChange(git);
 }
@@ -83,7 +84,7 @@ export function replaceRepositoryVariablesWithEnvVariables(repository, variables
 }
 
 export async function cloneRepository(repository, simpleGit, env) {
-  const tempRepositoryPath = await mkdtemp(`${tmpdir()}${sep}`);
+  const tempRepositoryPath = await mkdtemp(join(tmpdir(), sep));
   await simpleGit.clone(replaceRepositoryVariablesWithEnvVariables(repository, env), tempRepositoryPath, { '--depth': 1 })
   return tempRepositoryPath;
 }
@@ -100,13 +101,13 @@ async function calculateRepository(packagePath, packageManager) {
   return result;
 }
 
-async function saveResult(line, summary, result) {
-  await saveSummary(line, summary);
-  await saveLastResult(line, result);
+async function saveResult(basePath, line, summary, result) {
+  await saveSummary(basePath, line, summary);
+  await saveLastResult(basePath, line, result);
 }
 
-async function saveSummary(line, summary) {
-  const filePath = `data/history-${replaceRepositoryWithSafeChar(line)}.json`;
+async function saveSummary(basePath, line, summary) {
+  const filePath = join(basePath, 'data', `history-${replaceRepositoryWithSafeChar(line)}.json`);
   try {
     await access(filePath, constants.F_OK);
   } catch (e) {
@@ -117,8 +118,8 @@ async function saveSummary(line, summary) {
   await writeFile(filePath, JSON.stringify(content));
 }
 
-async function saveLastResult(line, result) {
-  const filePath = `data/last-run-${replaceRepositoryWithSafeChar(line)}.json`;
+async function saveLastResult(basePath, line, result) {
+  const filePath = join(basePath, 'data', `last-run-${replaceRepositoryWithSafeChar(line)}.json`);
   await writeFile(filePath, JSON.stringify(result));
 }
 

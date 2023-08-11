@@ -1,14 +1,22 @@
 {
   "name": "dependency-drift-tracker",
   "version": "0.0.1",
-  "description": "",
+  "description": "Track your dependency drift across multiple repositories using libyear.",
   "source": "index.html",
   "scripts": {
     "start": "parcel",
     "build": "parcel build",
     "test": "NODE_ENV=test mocha tests"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1024pix/dependency-drift-tracker.git"
+  },
   "author": "François de Metz",
+  "bugs": {
+    "url": "https://github.com/1024pix/dependency-drift-tracker/issues"
+  },
+  "homepage": "https://github.com/1024pix/dependency-drift-tracker#readme",
   "license": "GPL",
   "dependencies": {
     "francois-libyear": "^0.8.0",

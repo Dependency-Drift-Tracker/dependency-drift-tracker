@@ -8,6 +8,9 @@
     "build": "parcel build",
     "test": "NODE_ENV=test mocha tests"
   },
+  "exports": {
+    ".": "./src/index.mjs"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/1024pix/dependency-drift-tracker.git"

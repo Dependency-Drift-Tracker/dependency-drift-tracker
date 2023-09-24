@@ -1,5 +1,4 @@
-import { readFile, writeFile, mkdtemp, access } from 'node:fs/promises';
-import { constants } from 'node:fs';
+import { readFile, writeFile, mkdtemp, access, constants } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import util from 'node:util';

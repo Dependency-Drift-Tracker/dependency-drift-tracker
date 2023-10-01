@@ -20,7 +20,7 @@
     "url": "https://github.com/1024pix/dependency-drift-tracker/issues"
   },
   "homepage": "https://github.com/1024pix/dependency-drift-tracker#readme",
-  "license": "GPL",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "francois-libyear": "^0.8.0",
     "preferred-pm": "^3.0.3",

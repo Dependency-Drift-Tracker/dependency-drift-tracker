@@ -7,7 +7,7 @@ import {
   replaceRepositoryVariablesWithEnvVariables,
   replaceRepositoryWithSafeChar,
   createSummary,
-} from '../src/index.mjs';
+} from '../src/index.js';
 
 describe('#parseRepositoryLine', function() {
   it('parse simple repository', function() {

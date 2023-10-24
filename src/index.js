@@ -8,7 +8,7 @@ import simpleGit from 'simple-git';
 import { libyear } from 'francois-libyear';
 import preferredPM from 'preferred-pm';
 import semver from 'semver';
-import { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar } from './utils.mjs';
+import { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar } from './utils.js';
 
 export { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar };
 

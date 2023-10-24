@@ -8,8 +8,9 @@
     "build": "parcel build",
     "test": "NODE_ENV=test mocha tests"
   },
+  "type": "module",
   "exports": {
-    ".": "./src/index.mjs"
+    ".": "./src/index.js"
   },
   "repository": {
     "type": "git",

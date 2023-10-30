@@ -14,13 +14,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/1024pix/dependency-drift-tracker.git"
+    "url": "git+https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker.git"
   },
   "author": "François de Metz",
   "bugs": {
-    "url": "https://github.com/1024pix/dependency-drift-tracker/issues"
+    "url": "https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker/issues"
   },
-  "homepage": "https://github.com/1024pix/dependency-drift-tracker#readme",
+  "homepage": "https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker#readme",
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "francois-libyear": "^0.8.0",

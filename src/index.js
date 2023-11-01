@@ -23,7 +23,7 @@ const installCommand = {
   pnpm: 'pnpm install --ignore-scripts'
 };
 
-export async function generateWebsite(repositoryUrl, env = {}, websiteUrl = 'https://github.com/1024pix/dependency-drift-tracker.git') {
+export async function generateWebsite(repositoryUrl, env = {}, websiteUrl = 'https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker.git') {
   const tempDir = await cloneRepository(websiteUrl, simpleGit(), {});
   await exec('npm install --production=false', { cwd: tempDir });
   await exec('npm run build -- --public-url ./', { cwd: tempDir, env: {

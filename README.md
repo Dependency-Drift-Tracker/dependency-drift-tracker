@@ -1,27 +1,41 @@
 # Dependency drift tracker
 
-Ce projet a pour but de suivre nos retards sur les mises à jour de dépendances pour nos projets Node.js via la métrique [libyear][].
+Track your NPM dependencies drift across multiple repositories using [libyear][]. It store the result on flat files. A webpage can be used to display the drift over time.
 
-## Installation
+## Usage
 
-```bash
-npm ci
-```
+On GitHub, the [github action][action] is the easiest way to use dependency drift tracker.
 
-## Utilisation
+Create an empty directory with a `data` directory.
 
-Tout d'abord, il faut remplir le fichier `repositories.txt` avec les urls des repositories à suivre.
-Dans le cas d'un monorepo, vous pouvez suffixer l'url par `#path` pour indiquer le chemin vers le `package.json` à suivre.
+    mkdir -p repository-drift/data
+    cd repository-drift
+    touch repositories.txt
 
-Ensuite, il faut lancer le script `bin/main.mjs` :  
+And create a `repositories.txt` file with one git repository per line.
 
-```bash
-node bin/main.mjs
-```
+    https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker
+    https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker-action
 
-Nous avons fait le choix, de lancer le script toutes les 24h avec un cron dans une GitHub Action 
-et qui commit les nouveaux résultats.
+If your package.json is in a subdirectory, you can use the `#` to specify the path:
 
-Enfin, la page `index.html` permet de visualiser les résultats.
+    https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker-action#path/to/dir
+
+Then run:
+
+    npx --package=https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker -- dependency-drift-tracker
+
+It will create or update json files in the data directory.
+
+## Development
+
+Run tests
+
+    npm test
+
+## License
+
+GNU GPL 3
 
 [libyear]: https://libyear.com/
+[action]: https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker-action

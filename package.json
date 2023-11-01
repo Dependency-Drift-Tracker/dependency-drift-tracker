@@ -9,6 +9,7 @@
     "test": "NODE_ENV=test mocha tests"
   },
   "type": "module",
+  "bin": "./bin/main.js",
   "exports": {
     ".": "./src/index.js"
   },

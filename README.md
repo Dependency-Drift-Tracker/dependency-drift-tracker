@@ -8,9 +8,11 @@ On GitHub, the [github action][action] is the easiest way to use dependency drif
 
 Create an empty directory with a `data` directory.
 
-    mkdir -p repository-drift/data
-    cd repository-drift
-    touch repositories.txt
+```shell
+mkdir -p repository-drift/data
+cd repository-drift
+touch repositories.txt
+```
 
 And create a `repositories.txt` file with one git repository per line.
 
@@ -23,7 +25,9 @@ If your package.json is in a subdirectory, you can use the `#` to specify the pa
 
 Then run:
 
-    npx --package=https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker -- dependency-drift-tracker
+```shell
+npx --package=https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker -- dependency-drift-tracker
+```
 
 It will create or update json files in the data directory.
 
@@ -31,7 +35,9 @@ It will create or update json files in the data directory.
 
 Run tests
 
-    npm test
+```shell
+npm test
+```
 
 ## License
 

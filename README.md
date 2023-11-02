@@ -26,7 +26,7 @@ If your package.json is in a subdirectory, you can use the `#` to specify the pa
 Then run:
 
 ```shell
-npx --package=https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker -- dependency-drift-tracker
+npx dependency-drift-tracker
 ```
 
 It will create or update json files in the data directory.

@@ -1,6 +1,6 @@
 {
   "name": "dependency-drift-tracker",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Track your dependency drift across multiple repositories using libyear.",
   "source": "index.html",
   "scripts": {

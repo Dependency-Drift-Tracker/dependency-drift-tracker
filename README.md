@@ -49,7 +49,7 @@ It will create or update json files in the data directory. You can then initiali
 
 ### Configuration
 
-The `*repositories.txt` file contains the git repositories you want to track. Put one repository per line with the full URL to access it.
+The `repositories.txt` file contains the git repositories you want to track. Put one repository per line with the full URL to access it.
 
     https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker
     https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker-action
@@ -57,6 +57,10 @@ The `*repositories.txt` file contains the git repositories you want to track. Pu
 If your package.json is in a subdirectory, you can use the `#` to specify the path:
 
     https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker-action#path/to/dir
+
+#### Private repositories
+
+It's possible to clone private repositories or to hide parts of the repository using environments variables. For example with an environment variable named `ACCESS_TOKEN`, the following repository line could be updated `https://$ACCESS_TOKEN@github.com/Dependency-Drift-Tracker/dependency-drift-tracker-action`.
 
 ## Development
 

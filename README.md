@@ -14,7 +14,7 @@ The next step is to enable GitHub Pages for your repository:
 1. Go to your repository *Settings* page
 1. Go to the *Pages* sub-section on the left
 1. Under *Source*, select *Deploy from a branch*
-1. In the Branch dropdown, select **main** and **/docs**
+1. In the Branch dropdown, select **gh-pages** and **/ (root)**
 1. Click on *Save*
 
 And then you edit the `repositories.txt` file to add the git repositories you want to to track, one per line. See the configuration section for more details on it.

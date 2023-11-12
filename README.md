@@ -19,7 +19,7 @@ The next step is to enable GitHub Pages for your repository:
 
 And then you edit the `repositories.txt` file to add the git repositories you want to to track, one per line. See the configuration section for more details on it.
 
-Once finished, you an trigger an initial run of the action:
+Once finished, you can trigger an initial run of the action:
 
 1. Go to your repository *Actions* page
 1. Click on *Update libyear info* on the left

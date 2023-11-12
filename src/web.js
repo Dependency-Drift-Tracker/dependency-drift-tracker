@@ -60,7 +60,10 @@ function createLine({ repository, path }) {
 }
 
 function beautifyLine(line) {
-  return line.replaceAll('https://github.com/', '').replaceAll('.git', '');
+  return line
+    .replaceAll('https://github.com/', '')
+    .replaceAll('.git', '')
+    .replaceAll(/#$/g, '');
 }
 
 async function displayResult({ repository, path }) {

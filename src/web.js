@@ -3,7 +3,7 @@ import DataTable from 'datatables.net-bs';
 import 'datatables.net-bs/css/dataTables.bootstrap.css'
 import { parseFile, replaceRepositoryWithSafeChar } from './utils.js';
 
-const PATH = process.env.REPOSITORY_URL || `https://raw.githubusercontent.com/1024pix/dependency-drift-tracker/main`;
+const PATH = process.env.REPOSITORY_URL || `https://raw.githubusercontent.com/Dependency-Drift-Tracker/dependency-drift-status/main`;
 
 let driftChart;
 let pulseChart;

@@ -52,11 +52,15 @@ export async function main() {
       packageManager,
     };
   }));
+  const indexResult = {};
   for await (const { repository, path, packagePath, packageManager } of installResult) {
+    const line = `${repository}#${path}`;
     const result = await calculateRepository(packagePath, packageManager);
     const summary = createSummary(result);
-    await saveResult(basePath, `${repository}#${path}`, summary, result);
+    indexResult[line] = summary;
+    await saveResult(basePath, line, summary, result);
   }
+  await saveIndexFile(basePath, indexResult);
 }
 
 async function cloneRepositories(lines) {
@@ -131,4 +135,9 @@ export function createSummary(result) {
     memo.pulse += dep.pulse || 0;
     return memo;
   }, { drift: 0, pulse: 0, date: new Date() });
+}
+
+async function saveIndexFile(basePath, indexResult) {
+  const filePath = join(basePath, 'data', 'index.json');
+  await writeFile(filePath, JSON.stringify(indexResult));
 }

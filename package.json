@@ -32,7 +32,7 @@
   "devDependencies": {
     "@parcel/transformer-sass": "^2.9.3",
     "bootstrap": "^5.3.0",
-    "chai": "^4.3.7",
+    "chai": "^5.0.0",
     "chart.js": "^4.3.0",
     "datatables.net-bs": "^1.13.5",
     "mocha": "^10.2.0",

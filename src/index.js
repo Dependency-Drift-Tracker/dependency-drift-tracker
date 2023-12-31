@@ -9,6 +9,7 @@ import { libyear } from 'francois-libyear';
 import preferredPM from 'preferred-pm';
 import semver from 'semver';
 import { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar } from './utils.js';
+import packageJSON from '../package.json' assert { type: 'json' };
 
 export { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar };
 
@@ -24,7 +25,7 @@ const installCommand = {
 };
 
 export async function generateWebsite(repositoryUrl, env = {}, websiteUrl = 'https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker.git') {
-  const tempDir = await cloneRepository(websiteUrl, simpleGit(), {});
+  const tempDir = await cloneRepository(websiteUrl, simpleGit(), {}, { '--branch': `v${packageJSON.version}` });
   await exec('npm install --production=false', { cwd: tempDir });
   await exec('npm run build -- --public-url ./', { cwd: tempDir, env: {
     ...process.env,
@@ -89,9 +90,9 @@ export function replaceRepositoryVariablesWithEnvVariables(repository, variables
   }, repository);
 }
 
-export async function cloneRepository(repository, simpleGit, env) {
+export async function cloneRepository(repository, simpleGit, env, gitOptions = {}) {
   const tempRepositoryPath = await mkdtemp(join(tmpdir(), sep));
-  await simpleGit.clone(replaceRepositoryVariablesWithEnvVariables(repository, env), tempRepositoryPath, { '--depth': 1 })
+  await simpleGit.clone(replaceRepositoryVariablesWithEnvVariables(repository, env), tempRepositoryPath, { '--depth': 1, ...gitOptions })
   return tempRepositoryPath;
 }
 

@@ -42,16 +42,20 @@ export async function main() {
   const lines = parseFile(content);
   const clonedRepositoriesPath = await cloneRepositories(lines);
   const installResult = await Promise.all(lines.map(async ({ repository, path }) => {
-    const repositoryPath = clonedRepositoriesPath[repository];
-    const packagePath = join(repositoryPath, path);
-    const packageManager = await getPreferredPm(packagePath);
-    await installDependencies(packagePath, packageManager);
-    return {
-      repository,
-      path,
-      packagePath,
-      packageManager,
-    };
+    try {
+      const repositoryPath = clonedRepositoriesPath[repository];
+      const packagePath = join(repositoryPath, path);
+      const packageManager = await getPreferredPm(packagePath);
+      await installDependencies(packagePath, packageManager);
+      return {
+        repository,
+        path,
+        packagePath,
+        packageManager,
+      };
+    } catch(e) {
+      throw new Error(`Error while processing the ${repository}#${path}: ${e}`);
+    }
   }));
   const indexResult = {};
   for await (const { repository, path, packagePath, packageManager } of installResult) {
@@ -76,12 +80,16 @@ async function cloneRepositories(lines) {
 }
 
 export async function getPreferredPm(packagePath) {
-  const pm = (await preferredPM(packagePath)).name;
-  if (pm === 'yarn') {
-    const { stdout } = await exec('yarn --version', { cwd: packagePath });
-    return satisfies(stdout, "^0 || ^1") ? "yarn" : "berry";
+  try {
+    const pm = (await preferredPM(packagePath)).name;
+    if (pm === 'yarn') {
+      const { stdout } = await exec('yarn --version', { cwd: packagePath });
+      return satisfies(stdout, "^0 || ^1") ? "yarn" : "berry";
+    }
+    return pm;
+  } catch (e) {
+    throw new Error('Cannot determine package manager.');
   }
-  return pm;
 }
 
 export function replaceRepositoryVariablesWithEnvVariables(repository, variables) {

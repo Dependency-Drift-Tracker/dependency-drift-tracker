@@ -8,6 +8,7 @@ import simpleGit from 'simple-git';
 import { libyear } from 'francois-libyear';
 import preferredPM from 'preferred-pm';
 import semver from 'semver';
+import pLimit from 'p-limit';
 import { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar } from './utils.js';
 import packageJSON from '../package.json' assert { type: 'json' };
 
@@ -41,21 +42,24 @@ export async function main() {
   const content = await readFile(filePath, { encoding: 'utf8' });
   const lines = parseFile(content);
   const clonedRepositoriesPath = await cloneRepositories(lines);
-  const installResult = await Promise.all(lines.map(async ({ repository, path }) => {
-    try {
-      const repositoryPath = clonedRepositoriesPath[repository];
-      const packagePath = join(repositoryPath, path);
-      const packageManager = await getPreferredPm(packagePath);
-      await installDependencies(packagePath, packageManager);
-      return {
-        repository,
-        path,
-        packagePath,
-        packageManager,
-      };
-    } catch(e) {
-      throw new Error(`Error while processing the ${repository}#${path}: ${e}`);
-    }
+  const limit = pLimit(3);
+  const installResult = await Promise.all(lines.map(({ repository, path }) => {
+    return limit(async () => {
+      try {
+        const repositoryPath = clonedRepositoriesPath[repository];
+        const packagePath = join(repositoryPath, path);
+        const packageManager = await getPreferredPm(packagePath);
+        await installDependencies(packagePath, packageManager);
+        return {
+          repository,
+          path,
+          packagePath,
+          packageManager,
+        };
+      } catch(e) {
+        throw new Error(`Error while processing the ${repository}#${path}: ${e}`);
+      }
+    });
   }));
   const indexResult = {};
   for await (const { repository, path, packagePath, packageManager } of installResult) {

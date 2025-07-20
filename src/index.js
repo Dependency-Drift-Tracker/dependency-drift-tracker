@@ -5,7 +5,7 @@ import util from 'node:util';
 import { exec as execNoPromise } from 'node:child_process';
 import { chdir, cwd } from 'node:process';
 import simpleGit from 'simple-git';
-import { libyear } from 'francois-libyear';
+import { libyear } from 'libyear';
 import preferredPM from 'preferred-pm';
 import semver from 'semver';
 import pLimit from 'p-limit';

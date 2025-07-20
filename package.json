@@ -24,7 +24,7 @@
   "homepage": "https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker#readme",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "francois-libyear": "^0.8.0",
+    "libyear": "^0.9.0",
     "p-limit": "^6.0.0",
     "preferred-pm": "^4.0.0",
     "semver": "^7.5.2",

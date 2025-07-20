@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import util from 'node:util';
 import { exec as execNoPromise } from 'node:child_process';
-import { chdir, cwd } from 'node:process';
+import process from 'node:process';
 import simpleGit from 'simple-git';
 import { libyear } from 'libyear';
 import preferredPM from 'preferred-pm';
@@ -37,7 +37,7 @@ export async function generateWebsite(repositoryUrl, env = {}, websiteUrl = 'htt
 }
 
 export async function main() {
-  const basePath = cwd();
+  const basePath = process.cwd();
   const filePath = join(basePath, 'repositories.txt');
   const content = await readFile(filePath, { encoding: 'utf8' });
   const lines = parseFile(content);
@@ -113,10 +113,10 @@ function installDependencies(packagePath, packageManager) {
 }
 
 async function calculateRepository(packagePath, packageManager) {
-  const previousDir = cwd();
-  chdir(packagePath);
-  const result = await libyear(packageManager, { all: true });
-  chdir(previousDir);
+  const previousDir = process.cwd();
+  process.chdir(packagePath);
+  const result = await libyear(packageManager);
+  process.chdir(previousDir);
   return result;
 }
 

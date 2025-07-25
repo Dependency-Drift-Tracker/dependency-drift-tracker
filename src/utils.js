@@ -8,10 +8,12 @@ export function parseFile(content) {
 }
 
 export function parseRepositoryLine(line) {
-  const [repository, path] = line.split('#');
+  const [url, flags] = line.split(',');
+  const [repository, path] = url.split('#');
   return {
     repository,
     path: path || '',
+    libyearFlags: JSON.parse(flags || '{}'),
   };
 }
 

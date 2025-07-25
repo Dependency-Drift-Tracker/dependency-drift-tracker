@@ -13,14 +13,24 @@ describe('#parseRepositoryLine', function() {
   it('parse simple repository', function() {
     expect(parseRepositoryLine('https://github.com/1024pix/pix.git')).to.deep.equal({
       repository: 'https://github.com/1024pix/pix.git',
-      path: ''
+      path: '',
+      libyearFlags: {}
     })
   });
 
   it('parse repository with a sub directory', function() {
     expect(parseRepositoryLine('https://github.com/1024pix/pix.git#test')).to.deep.equal({
       repository: 'https://github.com/1024pix/pix.git',
-      path: 'test'
+      path: 'test',
+      libyearFlags: {}
+    })
+  });
+
+  it('parse repository with a sub directory and libyear flags', function() {
+    expect(parseRepositoryLine('https://github.com/1024pix/pix.git#test,{ "dev":true }')).to.deep.equal({
+      repository: 'https://github.com/1024pix/pix.git',
+      path: 'test',
+      libyearFlags: { dev: true}
     })
   });
 });
@@ -29,17 +39,19 @@ describe('#parseFile', function() {
   it('parse the file', function() {
     const content = `
 https://github.com/1024pix/pix.git#api
-https://github.com/1024pix/pix.git#mon-pix
+https://github.com/1024pix/pix.git#mon-pix, {"dev":true}
 # comment line
 `;
     expect(parseFile(content)).to.deep.equal([
       {
         repository: 'https://github.com/1024pix/pix.git',
         path: 'api',
+        libyearFlags: {}
       },
       {
         repository: 'https://github.com/1024pix/pix.git',
-        path: 'mon-pix'
+        path: 'mon-pix',
+        libyearFlags: { dev: true }
       },
     ])
   });

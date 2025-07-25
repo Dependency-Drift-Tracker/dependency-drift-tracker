@@ -10,7 +10,7 @@ import preferredPM from 'preferred-pm';
 import semver from 'semver';
 import pLimit from 'p-limit';
 import { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar } from './utils.js';
-import packageJSON from '../package.json' assert { type: 'json' };
+import packageJSON from '../package.json' with { type: 'json' };
 
 export { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar };
 
@@ -43,7 +43,7 @@ export async function main() {
   const lines = parseFile(content);
   const clonedRepositoriesPath = await cloneRepositories(lines);
   const limit = pLimit(3);
-  const installResult = await Promise.all(lines.map(({ repository, path }) => {
+  const installResult = await Promise.all(lines.map(({ repository, path, libyearFlags }) => {
     return limit(async () => {
       try {
         const repositoryPath = clonedRepositoriesPath[repository];
@@ -55,6 +55,7 @@ export async function main() {
           path,
           packagePath,
           packageManager,
+          libyearFlags,
         };
       } catch(e) {
         throw new Error(`Error while processing the ${repository}#${path}: ${e}`);
@@ -62,9 +63,9 @@ export async function main() {
     });
   }));
   const indexResult = {};
-  for await (const { repository, path, packagePath, packageManager } of installResult) {
+  for await (const { repository, path, packagePath, packageManager, libyearFlags } of installResult) {
     const line = `${repository}#${path}`;
-    const result = await calculateRepository(packagePath, packageManager);
+    const result = await calculateRepository(packagePath, packageManager, libyearFlags);
     const summary = createSummary(result);
     indexResult[line] = summary;
     await saveResult(basePath, line, summary, result);
@@ -112,10 +113,10 @@ function installDependencies(packagePath, packageManager) {
   return exec(installCommand[packageManager], { cwd: packagePath });
 }
 
-async function calculateRepository(packagePath, packageManager) {
+async function calculateRepository(packagePath, packageManager, libyearFlags) {
   const previousDir = process.cwd();
   process.chdir(packagePath);
-  const result = await libyear(packageManager);
+  const result = await libyear(packageManager, libyearFlags);
   process.chdir(previousDir);
   return result;
 }

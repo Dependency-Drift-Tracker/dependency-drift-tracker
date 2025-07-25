@@ -49,10 +49,10 @@ It will create or update json files in the data directory. You can then initiali
 
 ### Configuration
 
-The `repositories.txt` file contains the git repositories you want to track. Put one repository per line with the full URL to access it.
+The `repositories.txt` file contains the git repositories you want to track. Put one repository per line with the full URL to access it and you can add libyear flags in second option.
 
     https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker
-    https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker-action
+    https://github.com/Dependency-Drift-Tracker/dependency-drift-tracker-action,{ "dev": true }
 
 If your package.json is in a subdirectory, you can use the `#` to specify the path:
 

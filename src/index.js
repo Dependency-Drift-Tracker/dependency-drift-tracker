@@ -10,7 +10,7 @@ import preferredPM from 'preferred-pm';
 import semver from 'semver';
 import pLimit from 'p-limit';
 import { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar } from './utils.js';
-import packageJSON from '../package.json' assert { type: 'json' };
+import packageJSON from '../package.json' with { type: 'json' };
 
 export { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar };
 
@@ -115,7 +115,7 @@ function installDependencies(packagePath, packageManager) {
 async function calculateRepository(packagePath, packageManager) {
   const previousDir = process.cwd();
   process.chdir(packagePath);
-  const result = await libyear(packageManager);
+  const result = await libyear(packageManager, { dev: true });
   process.chdir(previousDir);
   return result;
 }

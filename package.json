@@ -26,7 +26,7 @@
   "dependencies": {
     "libyear": "^0.9.0",
     "p-limit": "^7.0.0",
-    "preferred-pm": "^4.0.0",
+    "preferred-pm": "^5.0.0",
     "semver": "^7.5.2",
     "simple-git": "^3.19.0"
   },

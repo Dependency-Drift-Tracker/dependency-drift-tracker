@@ -6,7 +6,7 @@ import { exec as execNoPromise } from 'node:child_process';
 import process from 'node:process';
 import simpleGit from 'simple-git';
 import { libyear } from 'libyear';
-import preferredPM from 'preferred-pm';
+import { preferredPM } from 'preferred-pm';
 import semver from 'semver';
 import pLimit from 'p-limit';
 import { parseFile, parseRepositoryLine, replaceRepositoryWithSafeChar } from './utils.js';

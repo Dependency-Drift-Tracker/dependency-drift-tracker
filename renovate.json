@@ -1,5 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>Dependency-Drift-Tracker/renovate-config:default"]
-  ]
 }

@@ -38,6 +38,6 @@
     "datatables.net-bs": "^2.0.1",
     "mocha": "^11.0.0",
     "parcel": "^2.9.3",
-    "sinon": "^21.0.0"
+    "sinon": "^22.0.0"
   }
 }

@@ -4,7 +4,7 @@ import { join, sep } from 'node:path';
 import util from 'node:util';
 import { exec as execNoPromise } from 'node:child_process';
 import process from 'node:process';
-import simpleGit from 'simple-git';
+import { simpleGit } from 'simple-git';
 import { libyear } from 'libyear';
 import { preferredPM } from 'preferred-pm';
 import semver from 'semver';
